@@ -1,0 +1,9 @@
+<div>Selecione um associado:</div>
+<select class="form-select" aria-label="Default select" id="person">
+<option selected>Selecione</option>
+    <% if(person.length > 0) { %>
+        <% for(var i = 0; i < person.length; i++) {%>
+        <option value="<%= person[i].id %>"><%= person[i].name %></option>
+        <% } %>
+    <% } %>
+</select>

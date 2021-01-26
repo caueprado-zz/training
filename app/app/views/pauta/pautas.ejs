@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<%- include('../template/header'); -%>
+	<body>
+	    <header>
+          <div class="navbar navbar-dark bg-dark box-shadow">
+            <div class="container d-flex justify-content-between">
+              <a href="#" class="navbar-brand d-flex align-items-center">
+                <strong>Pautas - edite a sessão de votação para cada pauta</strong>
+              </a>
+            </div>
+          </div>
+        </header>
+        <form>
+            <div class="card-group">
+               <%- include('../component/pauta_table'); -%>
+               <%- include('../component/pagination'); -%>
+	        </div>
+        </form>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    </body>
+</html>

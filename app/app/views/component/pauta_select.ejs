@@ -1,0 +1,9 @@
+<div>Selecione uma pauta:</div>
+<select class="form-select" aria-label="Default select" id="pauta">
+<option selected>Selecione</option>
+    <% if(pauta.length > 0) { %>
+        <% for(var i = 0; i < pauta.length; i++) {%>
+        <option value="<%= pauta[i].id %>"><%= pauta[i].name %></option>
+        <% } %>
+    <% } %>
+</select>

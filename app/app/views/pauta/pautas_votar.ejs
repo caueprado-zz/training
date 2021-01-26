@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<%- include('../template/header'); -%>
+	<body>
+	    <header>
+          <div class="navbar navbar-dark bg-dark box-shadow">
+            <div class="container d-flex justify-content-between">
+              <a href="#" class="navbar-brand d-flex align-items-center">
+                <strong>Pautas - votar</strong>
+              </a>
+            </div>
+          </div>
+        </header>
+
+	    <div class="container album py-4 bg-light">
+	        <form>
+                <div class="container album py-3 bg-light">
+                    <div class="card-body">
+                        <%- include('../component/person_select'); -%>
+                    </div>
+                    <div class="card-body">
+                        <%- include('../component/pauta_select'); -%>
+                    </div>
+                    <div class="card-body">
+                        <input type="radio" id="Sim" name="voto" value="Sim">
+                        <label for="Sim">Sim</label>
+
+                        <input type="radio" id="Nao" name="voto" value="Nao">
+                        <label for="Nao">Não</label>
+                    </div>
+                    <div class="card-body">
+                        <div class="btn-group">
+                            <button id="votar" name="votar" class="btn btn-sm btn-success">Votar</button>
+                            <button id="abrir" name="abrir" class="btn btn-sm btn-success">Abrir</button>
+                            <button id="close" name="fechar" class="btn btn-sm btn-danger">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+	    </div>
+	</div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script>
+            $("button[name='votar']").click(function() {
+                var sessionId = $('#pauta').val();
+                var personId = $("#person").val();
+                var voto = $('input[name="voto"]:checked').val() == 'Sim' ? 'YES' : 'NO';
+                var vote = { person_id : personId, schedule_id: sessionId, vote: voto}
+
+                $.ajax({
+                      type: "POST",
+                      url: '/session/votar',
+                      data: vote
+                    });
+                });
+            $("button[name='abrir']").click(function() {
+                var sessionId = $('#pauta').val();
+                $.ajax({
+                    type: "POST",
+                    url: '/session/abrir',
+                    data: {id : sessionId}
+                    });
+            });
+            $("button[name='fechar']").click(function() {
+                var sessionId = $('#pauta').val();
+                $.ajax({
+                    type: "POST",
+                    url: '/session/fechar',
+                    data: {id : sessionId}
+                    });
+            });
+        </script>
+    </body>
+</html>

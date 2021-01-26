@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<%- include('../template/header'); -%>
+
+	<body>
+	    <header>
+          <div class="navbar navbar-dark bg-dark box-shadow">
+            <div class="container d-flex justify-content-between">
+              <a href="#" class="navbar-brand d-flex align-items-center">
+                <strong>Pautas</strong>
+              </a>
+            </div>
+          </div>
+        </header>
+
+	    <div class="container album py-5 bg-light">
+	    	<div class="row">
+	    	<div class="col-md-4">
+                <div class="card mb-8 box-shadow">
+                    <div class="card-body">
+                            <a href='/pautas'>
+                                <div class="portal_wrapper text-center">
+                                <h4>Listar Pautas</h4>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card mb-8 box-shadow">
+                        <div class="card-body">
+                            <a href='/pautas/votar'>
+                                <div class="portal_wrapper text-center">
+                                <h4>Votar</h4>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card mb-8 box-shadow">
+                        <div class="card-body">
+                            <a href='/pautas/resultados'>
+                                <div class="portal_wrapper text-center">
+                                <h4>Resultado</h4>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+	    		<div class="col-md-4 clearfix">
+	    		    <div class="card mb-8 box-shadow">
+                        <div class="card-body">
+                            <a href='/pautas/cadastro'>
+                                <div class="portal_wrapper text-center">
+                                    <h4>Criar Pauta</h4>
+                                </div>
+                            </a>
+                        </div>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+				    <div class="card mb-8 box-shadow">
+                        <div class="card-body">
+                            <form action="/associados/cadastro" method="get">
+                                <a href="/associados/cadastro">
+                                    <div class="portal_wrapper text-center">
+                                        <h5> <i class="bi bi-alt"></i> Cadastro de associado</h4>
+                                    </div>
+                                </a>
+                            </form>
+				        </div>
+                    </div>
+				</div>
+
+			</div>
+	    </div>
+	
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
+	</body>
+</html>

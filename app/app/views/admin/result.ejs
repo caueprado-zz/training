@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	 <%- include('../template/header'); -%>
+
+	<body>
+        <header>
+            <div class="navbar navbar-dark bg-dark box-shadow">
+              <div class="container d-flex justify-content-between">
+                <a href="#" class="navbar-brand d-flex align-items-center">
+                <strong>Resultado da votação</strong>
+              </a>
+            </div>
+          </div>
+        </header>
+
+	    <div class="container">
+			<% if(validacao.length > 0) { %>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="alert alert-danger">
+							<strong>Atenção!</strong>
+							<ul>
+								<% for(var i = 0; i < validacao.length; i++) { %>
+									<li><%= validacao[i].msg %></li>
+								<% } %>
+							</ul>
+						</div>
+					</div>
+				</div>
+			<% } %>
+
+	    	<div class="row album py-5 bg-light">
+	    		<div class="col-sm-6 center-block">
+	    		    <canvas id="resultChart"></canvas>
+		    	</div>
+	    	</div>
+	    </div>
+
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+		    <script>
+                let ctx = document.getElementById("resultChart");
+                const userAction = async () => {
+                  const response = await fetch('http://example.com/movies.json', {
+                    method: 'POST',
+                    body: myBody, // string or object
+                    headers: {
+                      'Content-Type': 'application/json'
+                    }
+                  });
+                const myJson = await response.json();
+
+                let dados = {
+                    datasets: [{
+                        data: [10, 20],
+                        backgroundColor: ['rgb(255, 99, 132)', 'rgb(255, 199, 132)']
+                    }],
+
+                    labels: ['Não', 'Sim']
+                };
+
+                let opcoes = {
+                    cutoutPercentage: 40
+                };
+
+                let resultChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: dados,
+                    options: opcoes
+                });
+
+            </script>
+<!--        <script src="/js/chart.js"></script> -->
+
+	</body>
+</html>

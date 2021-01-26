@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+
+    <%- include('../template/header'); -%>
+
+	<body>
+        <header>
+            <div class="navbar navbar-dark bg-dark box-shadow">
+              <div class="container d-flex justify-content-between">
+                <a href="#" class="navbar-brand d-flex align-items-center">
+                <strong>Cadastro de Associado</strong>
+              </a>
+            </div>
+          </div>
+        </header>
+
+	    <div class="container">
+			<% if(validacao.length > 0) { %>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="alert alert-danger">
+							<strong>Atenção!</strong>
+							<ul>
+								<% for(var i = 0; i < validacao.length; i++) { %>
+									<li><%= validacao[i].msg %></li>
+								<% } %>
+							</ul>
+						</div>
+					</div>
+				</div>
+			<% } %>
+
+	    	<div class="row">
+	    		<div class="col-sm-6 center-block">
+					<form action="/associados" method="post">
+						<div class="input-group-sm mb-3">
+                                <label for="name">Nome:</label>
+                                <input type="text" placeholder="@tritao" class="form-control" id="name" name="name" maxlength="100" required>
+                            </div>
+						<div class=" input-group-sm mb-3">
+							<label for="document">Documento:</label>
+							<input type="text" class="form-control" id="document" name="document" placeholder="123.321.121-22" maxlength="14" required>
+						</div>
+<!-- 						<div class=" input-group-sm mb-3"> -->
+<!--                             <label for="phone">Telefone:</label> -->
+<!--                             <input type="text" class="form-control" id="phone" name="phone" placeholder="(11) 12321-1222" maxlength="14"> -->
+<!--                         </div> -->
+<!--                         <div class=" input-group-sm mb-3"> -->
+<!--                             <label for="cellphone">Celular:</label> -->
+<!--                             <input type="text" class="form-control" id="cellphone" name="cellphone" placeholder="(11) 12321-1222" maxlength="14"> -->
+<!--                         </div> -->
+						<button type="submit" class="btn btn-default">Cadastrar</button>
+						</form>
+		    	</div>
+	    	</div>
+	    </div>
+	
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
+	</body>
+</html>

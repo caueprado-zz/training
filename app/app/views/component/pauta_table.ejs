@@ -1,0 +1,28 @@
+<% if(pauta.length > 0) { %>
+   <table class="table">
+       <thead class="thead-dark">
+           <tr>
+               <th scope="col">#</th>
+               <th scope="col">Nome</th>
+               <th scope="col">Descrição</th>
+               <th scope="col">Categoria</th>
+               <th scope="col">Status</th>
+           </tr>
+       </thead>
+       <tbody>
+           <% for(var i = 0; i < pauta.length; i++) {%>
+               <tr>
+                 <th scope="row"><input type="radio" id="<%= pauta[i].name %>" name="sessionId" value="<%= pauta[i].name %>"></th>
+                 <td><%= pauta[i].name %></td>
+                 <td><%= pauta[i].description %></td>
+                 <td><%= pauta[i].category %></td>
+                 <td>
+                     <% if(pauta[i].session.state == "OPEN") {  %><span class="badge badge-success">Aberta</span>
+                     <% } if(pauta[i].session.state == "NEW") {  %><span class="badge badge-warning">Nova</span>
+                     <% } if(pauta[i].session.state == "CLOSED")  { %> <span class="badge badge-danger">Fechada</span> <% } %>
+                 </td>
+               </tr>
+           <% } %>
+       </tbody>
+   </table>
+<% } %>

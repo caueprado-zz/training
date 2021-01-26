@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<%- include('../template/header'); -%>
+	<body>
+	    <header>
+          <div class="navbar navbar-dark bg-dark box-shadow">
+            <div class="container d-flex justify-content-between">
+              <a href="#" class="navbar-brand d-flex align-items-center">
+                <strong>Pautas - Resultados</strong>
+              </a>
+            </div>
+          </div>
+        </header>
+
+	    <div class="container album py-4 bg-light">
+            <div class="container album py-3 bg-light">
+                <div class="card-body">
+                    <%- include('../component/pauta_select'); -%>
+                </div>
+                <canvas id="myChart"></canvas>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js"></script>
+                    <div class="card-body">
+                        <div class="btn-group">
+                            <div class="btn-group">
+                                <button id="resultado" name="resultado" class="btn btn-sm btn-outline-secondary">Resultado</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+	    </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script>
+            $("button[name='resultado']").click(function() {
+                var scheduleId = $('#pauta').val();
+                var result = { id: scheduleId, pauta : '<%= pauta %>'  };
+                $.ajax({
+                      type: "POST",
+                      url: '/pautas/resultado',
+                      data: result,
+                      success: function (data) {
+                      console.log(data);
+                          let ctx = document.getElementById("myChart");
+                          let dados = {
+                              datasets: [{
+                                  data: [ data.yes, data.no ],
+                                  backgroundColor: ['rgb(255, 199, 132)', 'rgb(55, 99, 132)']
+                              }],
+                              labels: ['Sim', 'Não']
+                          };
+                          let opcoes = {
+                              cutoutPercentage: 40
+                          };
+                          let meuDonutChart = new Chart(ctx, {
+                              type: 'doughnut',
+                              data: dados,
+                              options: opcoes
+                          });
+                      },
+                  });
+            });
+        </script>
+    </body>
+</html>
