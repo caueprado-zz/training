@@ -1,6 +1,6 @@
-Serviço responsável por cadastrar pautas e associados. E realizar sessões de votos
+Serviço responsável por cadastrar pautas e associados. E realizar sessões de votos pelos associados que obitiveram seu documento aprovado para votar.
 
-* Stack
+## Stack
 
 * Java 11
 * Mongo
@@ -23,6 +23,8 @@ Uma pauta tem uma sessão de votação
 Sessão - Session
 Possuí votos de associados
 
+## Considerações
+
 Foi construido um front end simples para a realização de testes e visualização do funcionamento do serviço
 
 o serviço ficou com 74% de cobertura de testes pois algumas classes não haviam necessidades de serem testadas
@@ -32,5 +34,28 @@ O Rest Assured não foi utilizado, usando a chamada direta ao controller da apli
 um exemplo com uso feito por mim, pode ser visualizado nesse projeto:
 https://github.com/mcorreiab/teste-desenvolvedor-java/pull/1
 
-Versionamento da API
+## Versionamento da API
 
+O versionamento de api é um recurso importante durante o desenvolvimento de APIs, uma vez que dentro de um ambiente ágil estamos lidando a todo 
+momento com mudanças, um aumento no número de integrações, para manter uma compatibilidade e o bom funcionamento é importante termos uma estratégia 
+funcional de versionamento de nossas APIs.
+
+Estratégias comuns para realizar tal requisito, poderiam ser adicionar um header contendo a versão da aplicação a qual deseja utilizar, ou então
+utilizar como parte da URL da api.
+
+Para esse projeto nós incorporamos o prefixo v1 ao path da api, sinalizando que é a nossa primeira versão de API. Caso precisassemos criar uma nova versão
+para cumprir com novos requisitos, poderiamos manter essa api v1 e criar uma api com o path v2/, a exemplo :
+
+V1 - O qual estará pronto para atender a quem já utiliza e não vê a necessidade imediata de atualizar a sua integração
+```
+v1/schedules
+```
+
+
+V2 - para novos clientes que adirão a nova regra de negócios e para clientes que irão atualizar para esse novo modelo de requisição
+
+```
+v2/schedules
+```
+
+Essa foi a estratégia escolhida pelo sua baixa complexidade e facilmente ser realizada.
