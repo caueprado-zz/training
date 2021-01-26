@@ -51,7 +51,7 @@ public class ScheduleSessionControllerTest extends TestBackground {
         buildSchedule(buildSession((NEW)));
         buildSchedule(buildSession((NEW)));
 
-        val result = sessionController.getAll();
+        val result = sessionController.getAll(1);
         assertThat(result.size()).isEqualTo(2);
     }
 }

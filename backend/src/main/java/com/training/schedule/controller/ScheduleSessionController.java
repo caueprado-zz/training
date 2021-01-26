@@ -41,8 +41,8 @@ public class ScheduleSessionController {
     @ApiResponses({
         @ApiResponse(code = 200, message = "OK", response = List.class)
     })
-    public List<Schedule> getAll() {
-        return scheduleSessionService.findAllSchedules().toList();
+    public List<Schedule> getAll(@RequestParam("page") final int page) {
+        return scheduleSessionService.findAllSchedules(page).toList();
     }
 
     @PostMapping("create")

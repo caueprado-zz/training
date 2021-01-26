@@ -24,6 +24,7 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 @RequiredArgsConstructor
 public class ScheduleSessionService {
 
+    private static final int PAGE_SIZE = 10;
     private final ScheduleRepository scheduleRepository;
 
     public Schedule findSchedule(final String scheduleId) {
@@ -31,8 +32,8 @@ public class ScheduleSessionService {
             .orElseThrow(ScheduleNotFoundException::new);
     }
 
-    public Page<Schedule> findAllSchedules() {
-        val pageable = PageRequest.of(0, 10);
+    public Page<Schedule> findAllSchedules(final int page) {
+        val pageable = PageRequest.of(page, PAGE_SIZE);
         return scheduleRepository.findAll(pageable);
     }
 
