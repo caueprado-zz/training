@@ -1,0 +1,46 @@
+## PROJECT
+server:
+  port: 8091
+
+info:
+  name: schedule
+  description: schedule
+  environment: local
+  version: 0.0.1
+
+quartz:
+  jobStore:
+  #The database name to be used to create the quartz scheduler specific collections.
+  dbName: quartz-jobs
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 50000
+        readTimeout: 10000
+
+spring:
+  application:
+    name: schedule-application
+  data:
+    mongodb:
+      database: session
+      port: 27017
+      host: mongo
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    serialization:
+      write_dates_as_timestamps: false
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    stream:
+      rabbit:
+        bindings:
+          messages:
+            consumer:
+              autoBindDlq: true

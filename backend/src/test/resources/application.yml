@@ -1,0 +1,11 @@
+mongodb:
+  client:
+    uri: mongodb://localhost:27017
+
+## PROJECT
+server:
+  port: 8091
+
+local:
+  server:
+    port: 8091

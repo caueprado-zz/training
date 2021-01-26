@@ -1,0 +1,42 @@
+version: '3'
+services:
+  rabbit:
+    image: "rabbitmq:3-management"
+    container_name: sc_rabbit
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+      RABBITMQ_DEFAULT_VHOST: "/"
+      RABBITMQ_ERLANG_COOKIE: 'takeMyCookies'
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    labels:
+      NAME: "rabbitmq"
+    volumes:
+      - "./docker/rabbit:/var/lib/rabbitmq"
+    networks:
+      - net
+  mongo:
+    image: mongo
+    container_name: sc_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - "./docker/mongo:/data/db"
+    networks:
+      - net
+  mongo-express:
+    image: mongo-express
+    container_name: sc_mongo_e
+    ports:
+      - 8090:8081
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
+      ME_CONFIG_MONGODB_PORT: 27017
+    networks:
+      - net
+
+networks:
+  net:
