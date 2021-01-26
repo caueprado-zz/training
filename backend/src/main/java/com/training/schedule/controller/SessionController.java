@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.training.schedule.controller.mapper.SessionMapper.toResponse;
 
-@Api
+@Api("Sessão")
 @Slf4j
 @RestController
-@RequestMapping("session")
+@RequestMapping("v1/session")
 @RequiredArgsConstructor
 public class SessionController {
 

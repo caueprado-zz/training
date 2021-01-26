@@ -21,9 +21,9 @@ import java.util.List;
 
 import static java.util.Objects.isNull;
 
-@Api("Api responsible to create a new associate")
+@Api("Api responsible to associate management")
 @RestController
-@RequestMapping("persons")
+@RequestMapping("v1/persons")
 @RequiredArgsConstructor
 public class PersonController {
 

@@ -18,9 +18,9 @@ import java.util.List;
 
 import static com.training.schedule.controller.mapper.ScheduleMapper.toResponse;
 
-@Api
+@Api("Pautas")
 @RestController
-@RequestMapping("schedules")
+@RequestMapping("v1/schedules")
 @RequiredArgsConstructor
 public class ScheduleSessionController {
 

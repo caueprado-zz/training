@@ -6,7 +6,7 @@ const axios = require('axios');
 
 async function getPersons() {
   return axios({
-            url: "http://127.0.0.1:8091/persons",
+            url: "http://127.0.0.1:8091/v1/persons",
          })
         .then(res => res.data)
         .catch(error => {
@@ -16,7 +16,7 @@ async function getPersons() {
 
 async function getPautas() {
   return axios({
-                url: "http://127.0.0.1:8091/schedules",
+                url: "http://127.0.0.1:8091/v1/schedules",
             }).then(res => res.data)
             .catch(error => {
                     res.send(error.data);
@@ -57,7 +57,7 @@ module.exports.novaPauta = function(application, req, res) {
 
 	axios({
     		method: 'post',
-    		url: 'http://127.0.0.1:8091/schedules/create',
+    		url: 'http://127.0.0.1:8091/v1/schedules/create',
     		data: payload
     	}).then(response => {
             res.render("pauta/pautas", {validacao : {}, pauta : response.data});
@@ -74,7 +74,7 @@ module.exports.resultado = function(application, req, res) {
 	const axios = require('axios');
     const payload = req.body;
     return axios({
-            url: 'http://127.0.0.1:8091/session/'+payload.id+'/result'
+            url: 'http://127.0.0.1:8091/v1/session/'+payload.id+'/result'
         })
         .then(response => {
             res.send(response.data);

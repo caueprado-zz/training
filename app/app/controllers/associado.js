@@ -19,7 +19,7 @@ module.exports.novoAssociado = function(application, req, res) {
 
 	axios({
 		method: 'post',
-		url: 'http://127.0.0.1:8091/persons',
+		url: 'http://127.0.0.1:8091/v1/persons',
 		data: payload
 	}).then(response => {
         console.log(response.data.url);
