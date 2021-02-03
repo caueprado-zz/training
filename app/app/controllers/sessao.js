@@ -8,11 +8,10 @@ module.exports.abrir = function(application, req, res) {
     var payload = req.body;
     var minute = 10;
     var sessionId = payload.id;
-    console.log(sessionId);
 
     axios({
         method: 'post',
-        url: 'http://127.0.0.1:8091/v1/session/'+sessionId+'/open/1',
+        url: 'http://127.0.0.1:8091/v1/sessions/'+sessionId+'/opening/1',
         data: payload
     }).then(response => {
         console.log(response);
@@ -30,7 +29,7 @@ module.exports.fechar = function(application, req, res) {
     console.log(id);
     axios({
     		method: 'put',
-    		url: 'http://127.0.0.1:8091/v1/session/'+id+'/close',
+    		url: 'http://127.0.0.1:8091/v1/sessions/'+id+'/closing',
     		data: payload
     	}).then(response => {
     	    console.log(response);
@@ -46,7 +45,7 @@ module.exports.votar = function(application, req, res) {
     var payload = req.body;
     axios({
         method: 'post',
-        url: 'http://127.0.0.1:8091/v1/session/vote',
+        url: 'http://127.0.0.1:8091/v1/sessions/vote',
         data: payload
     }).then(response => {
         console.log(response.data);

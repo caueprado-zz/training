@@ -74,7 +74,7 @@ module.exports.resultado = function(application, req, res) {
 	const axios = require('axios');
     const payload = req.body;
     return axios({
-            url: 'http://127.0.0.1:8091/v1/session/'+payload.id+'/result'
+            url: 'http://127.0.0.1:8091/v1/sessions/'+payload.id+'/result'
         })
         .then(response => {
             res.send(response.data);

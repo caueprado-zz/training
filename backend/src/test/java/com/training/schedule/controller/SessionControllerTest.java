@@ -11,7 +11,6 @@ import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -133,7 +132,7 @@ public class SessionControllerTest extends TestBackground {
         try {
             sessionController.close(schedule.getId());
         } catch (Exception e) {
-            assertThat(e.getClass()).isEqualTo(SessionAlreadyClosedException.class);
+            assertThat(e.getClass()).isEqualTo(SessionClosedException.class);
             assertThat(e.getMessage()).isEqualTo(String.format("Session %s already closed", schedule.getId()));
         }
     }
@@ -229,7 +228,7 @@ public class SessionControllerTest extends TestBackground {
         try {
             sessionController.vote(voteRequest);
         } catch (Exception e) {
-            assertThat(e.getClass()).isEqualTo(SessionAlreadyClosedException.class);
+            assertThat(e.getClass()).isEqualTo(SessionClosedException.class);
             assertThat(e.getMessage()).isEqualTo(String.format("Session %s, is not open for votes!", schedule.getId()));
         }
         assertThat(newSession.getVoteCount()).isEqualTo(0);
@@ -249,7 +248,7 @@ public class SessionControllerTest extends TestBackground {
         try {
             sessionController.vote(voteRequest);
         } catch (Exception e) {
-            assertThat(e.getClass()).isEqualTo(SessionAlreadyClosedException.class);
+            assertThat(e.getClass()).isEqualTo(SessionClosedException.class);
             assertThat(e.getMessage()).isEqualTo(String.format("Session %s, is not open for votes!", schedule.getId()));
         }
         assertThat(newSession.getVoteCount()).isEqualTo(0);
@@ -269,7 +268,7 @@ public class SessionControllerTest extends TestBackground {
         val newSession = schedule.getSession();
 
         assertThat(newSession.getVoteCount()).isEqualTo(1);
-        val result = sessionController.getSessionResult(schedule.getId());
+        val result = sessionController.get(schedule.getId());
         assertThat(result.getNo()).isEqualTo(0);
         assertThat(result.getYes()).isEqualTo(1);
         assertThat(result.getTotal()).isEqualTo(1);
@@ -278,7 +277,7 @@ public class SessionControllerTest extends TestBackground {
     @Test
     public void givenANotExistentSession_AndRequestsToSessionResult_ShouldReturnAException() {
         try {
-            sessionController.getSessionResult("123");
+            sessionController.get("123");
         } catch (Exception e) {
             assertThat(e.getClass()).isEqualTo(ScheduleNotFoundException.class);
         }
