@@ -37,10 +37,11 @@ spring:
     port: 5672
     username: guest
     password: guest
-  cloud:
-    stream:
-      rabbit:
-        bindings:
-          messages:
-            consumer:
-              autoBindDlq: true
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 3s
+          max-attempts: 3
+          max-interval: 10s
+          multiplier: 2

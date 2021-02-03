@@ -3,6 +3,7 @@ package com.training.schedule.infra.listener;
 import com.training.schedule.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,12 @@ public class PersonListener {
         log.info("Person with id: {}, is to be verified", personId);
         if(personId.isEmpty()) {
             log.error("Person id is blank.");
-        } else personService.validatePersonDocument(personId);
+        } else {
+//            try {
+                personService.validatePersonDocument(personId);
+//            } catch (Exception e) {
+//                throw new Exception("Not Recoverable message");
+//            }
+        }
     }
 }
