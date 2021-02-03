@@ -28,8 +28,8 @@ public class ControllerHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(SessionAlreadyClosedException.class)
-    public ResponseEntity<Object> handlePersonAlreadyException(SessionAlreadyClosedException ex, WebRequest request) {
+    @ExceptionHandler(SessionClosedException.class)
+    public ResponseEntity<Object> handlePersonAlreadyException(SessionClosedException ex, WebRequest request) {
         val body = createResponseBody("Session cannot be open again");
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }

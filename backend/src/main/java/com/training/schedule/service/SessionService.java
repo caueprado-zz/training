@@ -1,7 +1,7 @@
 package com.training.schedule.service;
 
 import com.training.schedule.domain.exception.ScheduleNotFoundException;
-import com.training.schedule.domain.exception.SessionAlreadyClosedException;
+import com.training.schedule.domain.exception.SessionClosedException;
 import com.training.schedule.domain.schedule.Schedule;
 import com.training.schedule.domain.schedule.repository.ScheduleRepository;
 import com.training.schedule.domain.schedule.session.Session;
@@ -54,7 +54,7 @@ public class SessionService {
         scheduleRepository.findById(scheduleId)
             .map(Schedule::getSession)
             .filter(session -> !NEW.equals(session.getState()))
-            .map(session -> new SessionAlreadyClosedException("Session is in a invalid state to open."));
+            .map(session -> new SessionClosedException("Session is in a invalid state to open."));
     }
 
     public void scheduleSessionClose(final String scheduleId, final int sessionDuration) {
@@ -69,7 +69,7 @@ public class SessionService {
         val currentSchedule = findValidSchedule(scheduleId);
         val session = currentSchedule.getSession();
         if (CLOSED.equals(session.getState())) {
-            throw new SessionAlreadyClosedException(String.format("Session %s already closed", scheduleId));
+            throw new SessionClosedException(String.format("Session %s already closed", scheduleId));
         }
         log.info("close current sesssion {}", scheduleId);
         session.setState(CLOSED);

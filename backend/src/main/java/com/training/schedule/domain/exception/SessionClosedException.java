@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "Session Already Closed")
-public class SessionAlreadyClosedException extends RuntimeException {
+public class SessionClosedException extends RuntimeException {
 
-    public SessionAlreadyClosedException(final String message) {
+    public SessionClosedException(final String message) {
         super(message);
     }
 }

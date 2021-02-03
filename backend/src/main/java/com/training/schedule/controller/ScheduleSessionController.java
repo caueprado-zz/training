@@ -41,11 +41,11 @@ public class ScheduleSessionController {
     @ApiResponses({
         @ApiResponse(code = 200, message = "OK", response = List.class)
     })
-    public List<Schedule> getAll(@RequestParam("page") final int page) {
+    public List<Schedule> list(@RequestParam("page") final int page) {
         return scheduleSessionService.findAllSchedules(page).toList();
     }
 
-    @PostMapping("create")
+    @PostMapping
     @ApiOperation(value = "Create a new schedule", tags = "Schedule")
     @ApiResponses({
         @ApiResponse(code = 200, message = "OK", response = ScheduleResponse.class)
