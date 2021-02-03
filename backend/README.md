@@ -65,3 +65,16 @@ v2/schedules
 ```
 
 Essa foi a estratégia escolhida pelo sua baixa complexidade e facilmente ser realizada.
+
+poderíamos aperfeiçoar o design da api da seguinte maneira:
+
+
+```
+v1/schedules
+```
+
+Como a sessão está relacionada a uma schedule
+
+```
+v1/schedules/{schedule_id}/sessions/{session_id}
+```

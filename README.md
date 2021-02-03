@@ -6,6 +6,7 @@ writeString()
 
 
 ## Update Java 14:
+https://wiki.openjdk.java.net/display/zgc/Main
 
 Pattern Matching for instanceof (Preview) [JEP 305]
 
@@ -53,3 +54,5 @@ Java Flight Record
 https://docs.oracle.com/javacomponents/jmc-5-4/jfr-runtime-guide/run.htm#JFRUH164
 
 java -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=duration=60s,filename=myrecording.jfr MyApp
+
+https://docs.oracle.com/javacomponents/jmc-5-4/jfr-runtime-guide/comline.htm#JFRUH189
