@@ -21,9 +21,9 @@ public class SessionVoteService {
     private final ScheduleSessionService sessionService;
     private final PersonService personService;
 
-    public void vote(final SessionVoteRequest sessionVoteRequest) {
+    public void vote(final String sessionId, final SessionVoteRequest sessionVoteRequest) {
         log.info("Person {}, will vote", sessionVoteRequest.getPersonId());
-        val currentSchedule = sessionService.findSchedule(sessionVoteRequest.getScheduleId());
+        val currentSchedule = sessionService.findSchedule(sessionId);
         val session = currentSchedule.getSession();
         if (!session.isOpen()) {
             throw new SessionClosedException(format("Session %s, is not open for votes!", currentSchedule.getId()));

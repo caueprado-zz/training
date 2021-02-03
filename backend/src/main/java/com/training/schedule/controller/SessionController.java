@@ -62,16 +62,16 @@ public class SessionController {
         return toResponse(sessionService.closeSession(sessionId));
     }
 
-    @PostMapping("vote")
+    @PostMapping("{sessionId}/vote")
     @ApiOperation(value = "Let a person to vote in a open session", tags = "Session")
     @ApiResponses({
             @ApiResponse(code = 200, message = "OK", response = SessionVoteRequest.class),
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 409, message = "Person already voted", response = PersonAlreadyCreatedException.class)
     })
-    public SessionVoteRequest vote(@RequestBody final SessionVoteRequest voteRequest) {
+    public SessionVoteRequest vote(@PathVariable final String sessionId, @RequestBody final SessionVoteRequest voteRequest) {
         log.info("Receive new vote from person with Id: {}", voteRequest.getPersonId());
-        sessionVoteService.vote(voteRequest);
+        sessionVoteService.vote(sessionId, voteRequest);
         return voteRequest;
     }
 

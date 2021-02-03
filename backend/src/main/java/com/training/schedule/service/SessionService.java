@@ -7,9 +7,11 @@ import com.training.schedule.domain.schedule.repository.ScheduleRepository;
 import com.training.schedule.domain.schedule.session.Session;
 import com.training.schedule.domain.schedule.session.SessionState;
 import com.training.schedule.infra.producer.SessionClosedProducer;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.Executors;
@@ -17,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.training.schedule.domain.schedule.session.SessionState.CLOSED;
 import static com.training.schedule.domain.schedule.session.SessionState.NEW;
+import static com.training.schedule.domain.schedule.session.SessionState.OPEN;
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.isNull;
 
@@ -32,7 +35,7 @@ public class SessionService {
         val schedule = findValidSchedule(scheduleId);
         validateSessionState(scheduleId);
 
-        val fixedDuration = isNull(sessionDuration) ? 1 : sessionDuration;
+        val fixedDuration = sessionDuration == 0 ? 1 : sessionDuration;
 
         val session = buildOpenSession(fixedDuration);
         schedule.setSession(session);
@@ -47,14 +50,14 @@ public class SessionService {
 
     private Schedule findValidSchedule(String scheduleId) {
         return scheduleRepository.findById(scheduleId)
-            .orElseThrow(ScheduleNotFoundException::new);
+                .orElseThrow(ScheduleNotFoundException::new);
     }
 
     private void validateSessionState(String scheduleId) {
         scheduleRepository.findById(scheduleId)
-            .map(Schedule::getSession)
-            .filter(session -> !NEW.equals(session.getState()))
-            .map(session -> new SessionClosedException("Session is in a invalid state to open."));
+                .map(Schedule::getSession)
+                .filter(session -> !NEW.equals(session.getState()))
+                .map(session -> new SessionClosedException("Session is in a invalid state to open."));
     }
 
     public void scheduleSessionClose(final String scheduleId, final int sessionDuration) {
@@ -79,9 +82,9 @@ public class SessionService {
 
     private Session buildOpenSession(final int sessionDuration) {
         return Session.builder()
-            .state(SessionState.OPEN)
-            .startTime(now())
-            .endTime(now().plusMinutes(sessionDuration))
-            .build();
+                .state(OPEN)
+                .startTime(now())
+                .endTime(now().plusMinutes(sessionDuration))
+                .build();
     }
 }

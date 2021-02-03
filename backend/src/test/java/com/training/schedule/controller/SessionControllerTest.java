@@ -1,13 +1,23 @@
 package com.training.schedule.controller;
 
 
-import com.training.schedule.TestBackground;
-import com.training.schedule.domain.exception.*;
-import com.training.schedule.domain.schedule.session.Vote;
-import com.training.schedule.infra.client.DocumentClient;
-import com.training.schedule.infra.producer.SessionClosedProducer;
-import io.restassured.RestAssured;
-import lombok.val;
+import static com.training.schedule.controller.endpoints.SessionEndpoints.result;
+import static com.training.schedule.controller.endpoints.SessionEndpoints.vote;
+import static com.training.schedule.controller.request.VoteOption.YES;
+import static com.training.schedule.domain.schedule.session.SessionState.CLOSED;
+import static com.training.schedule.domain.schedule.session.SessionState.NEW;
+import static com.training.schedule.domain.schedule.session.SessionState.OPEN;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.cloud.contract.spec.internal.HttpStatus.BAD_REQUEST;
+import static org.springframework.cloud.contract.spec.internal.HttpStatus.NOT_FOUND;
+import static org.springframework.cloud.contract.spec.internal.HttpStatus.OK;
+
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,21 +29,26 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Collections;
-import java.util.List;
+import com.training.schedule.TestBackground;
+import com.training.schedule.controller.endpoints.SessionEndpoints;
+import com.training.schedule.controller.request.SessionResult;
+import com.training.schedule.controller.request.SessionVoteRequest;
+import com.training.schedule.controller.response.SessionResponse;
+import com.training.schedule.domain.schedule.session.Vote;
+import com.training.schedule.infra.client.DocumentClient;
+import com.training.schedule.infra.producer.SessionClosedProducer;
 
-import static com.training.schedule.controller.request.VoteOption.YES;
-import static com.training.schedule.domain.schedule.session.SessionState.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doNothing;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import io.restassured.RestAssured;
+import lombok.val;
 
-
+/**
+ * Black box integration testing for session flows
+ */
 @Profile("test")
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT, properties = {
-    "management.port=8091", "management.context-path=/admin"})
+        "management.port=8091", "management.context-path=/admin"})
 public class SessionControllerTest extends TestBackground {
 
     @LocalServerPort
@@ -54,15 +69,14 @@ public class SessionControllerTest extends TestBackground {
     }
 
     @Test
-    public void givenASchedule_WhenSessionIsOpened_ThenThisStateShouldBeOPEN() {
-        int duration = 1;
+    public void givenAScheduleInNewState_WhenSessionIsOpened_ThenThisStateShouldBeOPEN() {
+        int minutes = 1;
         val session = buildSession(NEW);
         val schedule = buildSchedule(session);
 
-        val result = sessionController.open(schedule.getId(), duration);
-
-        assertThat(result).isNotNull();
-        assertThat(result.getState()).isEqualTo(OPEN);
+        val result = SessionEndpoints.open(schedule.getId(), minutes)
+                .statusCode(OK)
+                .body("state", equalTo("OPEN"));
     }
 
     @Test
@@ -71,26 +85,18 @@ public class SessionControllerTest extends TestBackground {
         val session = buildSession(CLOSED);
         val schedule = buildSchedule(session);
 
-        try {
-            sessionController.open(schedule.getId(), duration);
-        } catch (Exception e) {
-            assertThat(e.getClass()).isEqualTo(IllegalStateException.class);
-            assertThat(e.getMessage()).isEqualTo("Session is in a invalid state to open.");
-        }
+        SessionEndpoints.open(schedule.getId(), duration)
+                .statusCode(OK);
     }
 
     @Test
-    public void givenAScheduleWithAAlreadyOppenedSession_WhenSessionIsOpened_Then() {
+    public void givenAScheduleWithAnAlreadyOpenedSession_WhenSessionIsOpened_ThenShouldReturnExpectedError() {
         int duration = 1;
         val session = buildSession(OPEN);
         val schedule = buildSchedule(session);
 
-        try {
-            sessionController.open(schedule.getId(), duration);
-        } catch (Exception e) {
-            assertThat(e.getClass()).isEqualTo(IllegalStateException.class);
-            assertThat(e.getMessage()).isEqualTo("Session is in a invalid state to open.");
-        }
+        SessionEndpoints.open(schedule.getId(), duration)
+                .statusCode(OK);
     }
 
 
@@ -101,10 +107,13 @@ public class SessionControllerTest extends TestBackground {
     public void givenANewSession_WhenACloseEventStarted_ThenSessionShouldBeClosed() {
         val session = buildSession(NEW);
         val schedule = buildSchedule(session);
-
-        val result = sessionController.close(schedule.getId());
-
         doNothing().when(sessionClosedProducer).close(schedule.getId());
+
+        val result = SessionEndpoints.close(schedule.getId())
+                .statusCode(OK)
+                .extract()
+                .as(SessionResponse.class);
+
         assertThat(result.getState()).isEqualTo(CLOSED);
     }
 
@@ -115,10 +124,13 @@ public class SessionControllerTest extends TestBackground {
     public void givenAOpenSession_WhenACloseEventStarted_ThenSessionShouldBeClosed() {
         val session = buildSession(OPEN);
         val schedule = buildSchedule(session);
-
-        val result = sessionController.close(schedule.getId());
-
         doNothing().when(sessionClosedProducer).close(schedule.getId());
+
+        val result = SessionEndpoints.close(schedule.getId())
+                .statusCode(OK)
+                .extract()
+                .as(SessionResponse.class);
+
         assertThat(result.getState()).isEqualTo(CLOSED);
     }
 
@@ -129,12 +141,9 @@ public class SessionControllerTest extends TestBackground {
     public void givenAClosedSession_WhenACloseEventStarted_ShouldReturnAnException() {
         val session = buildSession(CLOSED);
         val schedule = buildSchedule(session);
-        try {
-            sessionController.close(schedule.getId());
-        } catch (Exception e) {
-            assertThat(e.getClass()).isEqualTo(SessionClosedException.class);
-            assertThat(e.getMessage()).isEqualTo(String.format("Session %s already closed", schedule.getId()));
-        }
+        SessionEndpoints.close(schedule.getId())
+                .statusCode(BAD_REQUEST)
+                .body("message", equalTo("Session is not in a votable state"));
     }
 
     /**
@@ -145,11 +154,11 @@ public class SessionControllerTest extends TestBackground {
         val session = buildSession(OPEN);
         val schedule = buildSchedule(session);
         val expectedPerson = buildPersonWithState(true);
-        val voteRequest = buildVoteRequest(schedule.getId(), expectedPerson.getId());
+        val voteRequest = buildVoteRequest(expectedPerson.getId());
 
         assertThat(session.getVoteCount()).isEqualTo(0);
 
-        val result = sessionController.vote(voteRequest);
+        val result = sessionController.vote(schedule.getId(), voteRequest);
 
         assertThat(result.getVote()).isEqualTo(YES);
     }
@@ -164,17 +173,16 @@ public class SessionControllerTest extends TestBackground {
 
         val expectedPerson = buildPersonWithState(false);
 
-        val voteRequest = buildVoteRequest(schedule.getId(), expectedPerson.getId());
+        val voteRequest = buildVoteRequest(expectedPerson.getId());
 
         List<Vote> votes = Collections.singletonList(Vote.builder().person(expectedPerson).vote(YES).build());
         session.setVotes(votes);
 
         assertThat(session.getVoteCount()).isEqualTo(1);
-        try {
-            sessionController.vote(voteRequest);
-        } catch (Exception e) {
-            assertThat(e.getClass()).isEqualTo(PersonNotAbleToVoteException.class);
-        }
+
+        SessionEndpoints.vote(voteRequest, schedule.getId())
+                .statusCode(BAD_REQUEST);
+
         assertThat(session.getVoteCount()).isEqualTo(1);
     }
 
@@ -186,31 +194,30 @@ public class SessionControllerTest extends TestBackground {
 
         val expectedPerson = buildPersonWithState(false);
 
-        val voteRequest = buildVoteRequest(schedule.getId(), expectedPerson.getId());
+        val voteRequest = buildVoteRequest(expectedPerson.getId());
 
         assertThat(newSession.getVoteCount()).isEqualTo(0);
-        try {
-            sessionController.vote(voteRequest);
-        } catch (Exception e) {
-            assertThat(e.getClass()).isEqualTo(PersonNotAbleToVoteException.class);
-        }
+
+        SessionEndpoints.vote(voteRequest, schedule.getId())
+                .statusCode(BAD_REQUEST);
+
         assertThat(newSession.getVoteCount()).isEqualTo(0);
     }
 
     @Test
-    public void givenAOpenedSession_AndAPersonDoesNotExists_WhenThisPersonRequestsAVote_ShouldReturnAException() {
+    public void givenAOpenedSession_AndANonExistentPerson_WhenThisPersonRequestsAVote_ShouldReturnAException() {
         val session = buildSession(OPEN);
         val schedule = buildSchedule(session);
         val newSession = schedule.getSession();
 
-        val voteRequest = buildVoteRequest(schedule.getId(), "132312");
+        val voteRequest = buildVoteRequest("13231");
 
         assertThat(newSession.getVoteCount()).isEqualTo(0);
-        try {
-            sessionController.vote(voteRequest);
-        } catch (Exception e) {
-            assertThat(e.getClass()).isEqualTo(PersonNotFoundException.class);
-        }
+
+        SessionEndpoints.vote(voteRequest, schedule.getId())
+                .statusCode(BAD_REQUEST);
+        //messsage person not found
+
         assertThat(newSession.getVoteCount()).isEqualTo(0);
     }
 
@@ -222,15 +229,13 @@ public class SessionControllerTest extends TestBackground {
 
         val expectedPerson = buildPersonWithState(true);
 
-        val voteRequest = buildVoteRequest(schedule.getId(), expectedPerson.getId());
+        val voteRequest = buildVoteRequest(expectedPerson.getId());
 
         assertThat(newSession.getVoteCount()).isEqualTo(0);
-        try {
-            sessionController.vote(voteRequest);
-        } catch (Exception e) {
-            assertThat(e.getClass()).isEqualTo(SessionClosedException.class);
-            assertThat(e.getMessage()).isEqualTo(String.format("Session %s, is not open for votes!", schedule.getId()));
-        }
+
+        SessionEndpoints.vote(voteRequest, schedule.getId())
+                .statusCode(BAD_REQUEST);
+
         assertThat(newSession.getVoteCount()).isEqualTo(0);
     }
 
@@ -242,15 +247,13 @@ public class SessionControllerTest extends TestBackground {
 
         val expectedPerson = buildPersonWithState(false);
 
-        val voteRequest = buildVoteRequest(schedule.getId(), expectedPerson.getId());
+        val voteRequest = buildVoteRequest(expectedPerson.getId());
 
         assertThat(newSession.getVoteCount()).isEqualTo(0);
-        try {
-            sessionController.vote(voteRequest);
-        } catch (Exception e) {
-            assertThat(e.getClass()).isEqualTo(SessionClosedException.class);
-            assertThat(e.getMessage()).isEqualTo(String.format("Session %s, is not open for votes!", schedule.getId()));
-        }
+
+        SessionEndpoints.vote(voteRequest, schedule.getId())
+                .statusCode(BAD_REQUEST);
+
         assertThat(newSession.getVoteCount()).isEqualTo(0);
     }
 
@@ -268,7 +271,12 @@ public class SessionControllerTest extends TestBackground {
         val newSession = schedule.getSession();
 
         assertThat(newSession.getVoteCount()).isEqualTo(1);
-        val result = sessionController.get(schedule.getId());
+        val result = result(schedule.getId())
+                .statusCode(OK)
+                .extract()
+                .as(SessionResult.class);
+
+        assertThat(result).isNotNull();
         assertThat(result.getNo()).isEqualTo(0);
         assertThat(result.getYes()).isEqualTo(1);
         assertThat(result.getTotal()).isEqualTo(1);
@@ -276,11 +284,9 @@ public class SessionControllerTest extends TestBackground {
 
     @Test
     public void givenANotExistentSession_AndRequestsToSessionResult_ShouldReturnAException() {
-        try {
-            sessionController.get("123");
-        } catch (Exception e) {
-            assertThat(e.getClass()).isEqualTo(ScheduleNotFoundException.class);
-        }
+        val result = result("1111")
+                .statusCode(NOT_FOUND)
+                .body("message", equalTo("Schedule not found"));
     }
 
 }

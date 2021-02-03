@@ -8,11 +8,6 @@ info:
   environment: local
   version: 0.0.1
 
-quartz:
-  jobStore:
-  #The database name to be used to create the quartz scheduler specific collections.
-  dbName: quartz-jobs
-
 feign:
   client:
     config:

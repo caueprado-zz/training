@@ -72,19 +72,22 @@ public class TestBackground {
 
     /**
      * Builders for vote testing
-     * @param scheduleId
      * @param id
-     * @return
+     * @return A SessionVoteRequest Object
      */
-    protected SessionVoteRequest buildVoteRequest(final String scheduleId, String id) {
+    protected SessionVoteRequest buildVoteRequest(final String id) {
         return SessionVoteRequest.builder()
             .personId(id)
-            .scheduleId(scheduleId)
             .vote(YES)
             .build();
     }
 
-    protected void assertResult(com.training.schedule.domain.schedule.Schedule expected, com.training.schedule.domain.schedule.Schedule result) {
+    /**
+     * Method used to do assertions on two objects
+     * @param expected expected values
+     * @param result execution result
+     */
+    protected void assertResult(final Schedule expected, final Schedule result) {
         assertThat(result.getName()).isEqualTo(expected.getName());
         assertThat(result.getCategory()).isEqualTo(expected.getCategory());
         assertThat(result.getDescription()).isEqualTo(expected.getDescription());

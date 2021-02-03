@@ -12,6 +12,5 @@ import lombok.NoArgsConstructor;
 public class SessionVoteRequest {
 
     private String personId;
-    private String scheduleId;
     private VoteOption vote;
 }

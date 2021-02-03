@@ -30,7 +30,7 @@ public class ControllerHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(SessionClosedException.class)
     public ResponseEntity<Object> handlePersonAlreadyException(SessionClosedException ex, WebRequest request) {
-        val body = createResponseBody("Session cannot be open again");
+        val body = createResponseBody("Session is not in a votable state");
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
@@ -52,10 +52,16 @@ public class ControllerHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
-    protected Map<String, Object> createResponseBody(final String s) {
+    @ExceptionHandler(ScheduleNotFoundException.class)
+    public ResponseEntity<Object> handleScheduleNotFoundException(final ScheduleNotFoundException ex, final WebRequest request) {
+        val body = createResponseBody("Schedule not found");
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    protected Map<String, Object> createResponseBody(final String message) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
-        body.put("message", s);
+        body.put("message", message);
         return body;
     }
 }
