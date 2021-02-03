@@ -17,10 +17,10 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Profile("dev")
-@EnableFeignClients(value = "com.poc.resiliencia.client")
+@EnableFeignClients(value = "com.training.schedule.infra.client")
 public class IntegrationConfiguration {
 
-    private static final String URL = "https://0cc79238-26a1-46ea-843b-a162163e4fe4.mock.pstmn.io";
+    private static final String URL = "https://user-info.herokuapp.com";
 
     @Bean
     public DocumentClient serviceClient() {

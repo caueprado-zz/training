@@ -23,6 +23,16 @@ Uma pauta tem uma sessão de votação
 Sessão - Session
 Possuí votos de associados
 
+##Para Rodar
+
+subir o ambiente docker localizado na pasta docker
+
+Utilizar o profile dev
+
+```
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
 ## Considerações
 
 Foi construido um front end simples para a realização de testes e visualização do funcionamento do serviço
@@ -37,8 +47,6 @@ https://github.com/mcorreiab/teste-desenvolvedor-java/pull/1
 O serviço é simples e escalável estratégias dentro de containers como Kubernetes permitem que possamos isolar serviços e workloads.
 Para requisitos de performance poderia ter utilizado uma API gateway do front para o backend distribuindo as requisições entre uma ou mais instancias 
 da aplicação, porém para evitar over engineering não foi implementado.
-
-
 
 ## Versionamento da API
 
