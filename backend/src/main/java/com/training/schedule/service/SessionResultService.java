@@ -1,13 +1,15 @@
 package com.training.schedule.service;
 
-import com.training.schedule.controller.request.SessionResult;
-import lombok.RequiredArgsConstructor;
-import lombok.val;
+import static com.training.schedule.controller.request.VoteOption.NO;
+import static com.training.schedule.controller.request.VoteOption.YES;
+
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
-import static com.training.schedule.controller.request.VoteOption.NO;
-import static com.training.schedule.controller.request.VoteOption.YES;
+import com.training.schedule.controller.request.SessionResult;
+
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 @Service
 @RequiredArgsConstructor
@@ -23,9 +25,9 @@ public class SessionResultService {
         val session = serviceSchedule.getSession();
 
         return SessionResult.builder()
-            .total(session.getVoteCount())
-            .yes((int) session.getVotesOf(YES))
-            .no((int) session.getVotesOf(NO))
-            .build();
+                .total(session.getVoteCount())
+                .yes((int) session.getVotesOf(YES))
+                .no((int) session.getVotesOf(NO))
+                .build();
     }
 }

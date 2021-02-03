@@ -2,7 +2,7 @@ Serviço responsável por cadastrar pautas e associados. E realizar sessões de 
 
 ## Stack
 
-* Java 11
+* Java 14
 * Mongo
 * Spring boot
 * RabbitMq
@@ -65,4 +65,3 @@ v2/schedules
 ```
 
 Essa foi a estratégia escolhida pelo sua baixa complexidade e facilmente ser realizada.
-

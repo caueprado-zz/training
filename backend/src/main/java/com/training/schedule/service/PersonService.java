@@ -33,15 +33,14 @@ public class PersonService {
     public Person create(final PersonRequest personRequest) {
         log.info("Creating new associate with name {} and document {}", personRequest.getName(), personRequest.getDocument());
         if (personRepository.findByDocument(personRequest.getDocument()).isPresent()) {
-            log.error("Person with document {}, already exists.", personRequest.getDocument());
+            String message = "Person with document $document, already exists.".replace("$document", personRequest.getDocument());
+            log.error(message);
             throw new PersonAlreadyCreatedException(DOCUMENT_ALREADY_EXISTS);
         }
 
         val person = buildPerson(personRequest);
-
         val newPerson = personRepository.save(person);
         personValidationProducer.validatePerson(newPerson.getId());
-
         return newPerson;
     }
 
