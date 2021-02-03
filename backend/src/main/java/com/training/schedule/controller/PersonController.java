@@ -48,7 +48,7 @@ public class PersonController {
     @ApiResponses({
         @ApiResponse(code = 200, message = "OK", response = PersonResponse.class),
         @ApiResponse(code = 404, message = "Not found")})
-    public List<Person> find() {
+    public List<Person> list() {
         return personService.find();
     }
 

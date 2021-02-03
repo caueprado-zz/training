@@ -81,7 +81,7 @@ public class PersonControllerTest extends TestBackground {
     public void givenAValidPerson_WhenRequestToFind_ThenResponsesWithAPersonData() {
         val person = buildPersonWithState(true);
 
-        val result = personController.find();
+        val result = personController.list();
 
         assertThat(result.size()).isEqualTo(1);
         result.forEach(
