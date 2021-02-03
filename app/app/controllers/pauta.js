@@ -57,7 +57,7 @@ module.exports.novaPauta = function(application, req, res) {
 
 	axios({
     		method: 'post',
-    		url: 'http://127.0.0.1:8091/v1/schedules/create',
+    		url: 'http://127.0.0.1:8091/v1/schedules',
     		data: payload
     	}).then(response => {
             res.render("pauta/pautas", {validacao : {}, pauta : response.data});
