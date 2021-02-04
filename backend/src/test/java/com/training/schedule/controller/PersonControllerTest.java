@@ -7,7 +7,6 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.cloud.contract.spec.internal.HttpStatus.OK;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +22,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.training.schedule.TestBackground;
 import com.training.schedule.controller.endpoints.PersonEndpoints;
 import com.training.schedule.controller.request.PersonRequest;
+import com.training.schedule.controller.response.PersonResponse;
 import com.training.schedule.controller.validator.PersonCreationValidator;
+import com.training.schedule.domain.person.Person;
 import com.training.schedule.domain.person.repository.PersonRepository;
 import com.training.schedule.infra.client.DocumentClient;
 import com.training.schedule.infra.producer.PersonValidationProducer;
@@ -41,8 +42,6 @@ public class PersonControllerTest extends TestBackground {
     private static final String FIELD_IS_MISSING = "Field is missing";
     private static final String MESSAGE = "message";
 
-    @Autowired
-    private PersonController personController;
     @MockBean
     private PersonValidationProducer personValidationProducer;
     @Autowired
@@ -69,8 +68,12 @@ public class PersonControllerTest extends TestBackground {
 
         doNothing().when(personValidationProducer).validatePerson(any());
 
-        PersonEndpoints.create(personRequest)
-                .statusCode(OK);
+        val result = PersonEndpoints.create(personRequest)
+                .statusCode(OK)
+                .extract()
+                .as(PersonResponse.class);
+        val expected = personRepository.findByDocument(personRequest.getDocument()).get();
+        assertThat(result).usingRecursiveComparison().isEqualTo(expected);
     }
 
     @Test
@@ -101,19 +104,14 @@ public class PersonControllerTest extends TestBackground {
     public void givenAValidPerson_WhenRequestToFind_ThenResponsesWithAPersonData() {
         val person = buildPersonWithState(true);
 
-        personController.list();
-
-        val result = PersonEndpoints.list().statusCode(OK)
+        val result = PersonEndpoints.list()
+                .statusCode(OK)
                 .extract()
                 .jsonPath()
-                .getList("$");
+                .getList(".", Person.class);
+//                .as(Person[].class, ObjectMapperType.GSON);
 
-        assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(person);
-    }
-
-    @After
-    public void cleanup() {
-        personRepository.deleteAll();
+        val expected = personRepository.findAll();
+        assertThat(result).usingRecursiveComparison().isEqualTo(expected);
     }
 }
