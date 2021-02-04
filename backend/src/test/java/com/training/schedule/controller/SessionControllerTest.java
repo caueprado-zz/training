@@ -2,7 +2,6 @@ package com.training.schedule.controller;
 
 
 import static com.training.schedule.controller.endpoints.SessionEndpoints.result;
-import static com.training.schedule.controller.endpoints.SessionEndpoints.vote;
 import static com.training.schedule.controller.request.VoteOption.YES;
 import static com.training.schedule.domain.schedule.session.SessionState.CLOSED;
 import static com.training.schedule.domain.schedule.session.SessionState.NEW;
@@ -32,7 +31,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.training.schedule.TestBackground;
 import com.training.schedule.controller.endpoints.SessionEndpoints;
 import com.training.schedule.controller.request.SessionResult;
-import com.training.schedule.controller.request.SessionVoteRequest;
 import com.training.schedule.controller.response.SessionResponse;
 import com.training.schedule.domain.schedule.session.Vote;
 import com.training.schedule.infra.client.DocumentClient;

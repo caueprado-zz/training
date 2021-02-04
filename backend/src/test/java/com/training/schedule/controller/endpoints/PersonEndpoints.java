@@ -23,7 +23,7 @@ public final class PersonEndpoints {
                 .then();
     }
 
-    public static ValidatableResponse list(final String sessionId) {
+    public static ValidatableResponse list() {
         return given()
                 .when()
                 .get(PERSON_PATH)

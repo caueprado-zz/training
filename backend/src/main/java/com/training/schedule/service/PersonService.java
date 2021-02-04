@@ -22,7 +22,7 @@ import static com.training.schedule.infra.client.response.DocumentStatus.ABLE_TO
 @RequiredArgsConstructor
 public class PersonService {
 
-    private static final String DOCUMENT_ALREADY_EXISTS = "Document already exists";
+    private static final String DOCUMENT_ALREADY_EXISTS = "A Person with this document already exists";
 
     private final PersonRepository personRepository;
     private final PersonValidationProducer personValidationProducer;
